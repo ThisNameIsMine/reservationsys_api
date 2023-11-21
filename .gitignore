@@ -37,5 +37,5 @@ next-env.d.ts
 
 .idea
 
-venv/
+env/
 *.sqlite3
