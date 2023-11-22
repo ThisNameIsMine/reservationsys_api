@@ -15,22 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from dj_rest_auth.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
-from .views import StudentViewSet, TeacherViewSet, LessonViewSet
-
-
-router = DefaultRouter()
-router.register(r'students', StudentViewSet, basename='student')
-router.register(r'teachers', TeacherViewSet, basename='teacher')
-router.register(r'lessons', LessonViewSet, basename='lesson')
-
+from django.urls import path
+from .views import getTeacherNotifications,getStudentNotifications, loginUser, registerUser, createNotification
+from project import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/token/', obtain_jwt_token, name='obtain_jwt_token'),
-    path('api/token/refresh/', refresh_jwt_token, name='refresh_jwt_token'),
-    path('api/token/verify/', verify_jwt_token, name='verify_jwt_token'),
-    path('', include(router.urls)),
+    path("registration/", registerUser, name="registration"),
+    path("login/", loginUser, name="login"),
+    path('teachersNotifications/<int:id>', getTeacherNotifications, name='getTeacherNotifications'),
+    path('studentsNotifications/<int:id>', getStudentNotifications, name='getStudentNotifications'),
+    path('crtnotify/<int:id>', views.createNotification, name='createNotification'),
+    path('allUsers/', views.getAllUsers, name='allUsers')
+
+
 ]
