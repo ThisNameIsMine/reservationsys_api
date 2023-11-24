@@ -19,7 +19,7 @@ class UserNew(models.Model):
 class Teacher(models.Model):
     user = models.OneToOneField(UserNew, on_delete=models.CASCADE)
     earnings = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    last_active = models.DateTimeField(auto_created=True, blank=True)
+    last_active = models.DateTimeField(auto_created=True, blank=False)
 
     def __str__(self):
         return self.user.firstName + " " + self.user.lastName + " - " #+ self.last_active
@@ -27,7 +27,8 @@ class Teacher(models.Model):
 class Student(models.Model):
     user = models.OneToOneField(UserNew, on_delete=models.CASCADE)
     account_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    last_active = models.DateTimeField(auto_created=True, blank=True)
+    #last_active = models.DateTimeField(auto_created=True, blank=True)
+    last_active = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.user.username + " - " + self.last_active
@@ -49,3 +50,17 @@ class Notification(models.Model):
     message_type = models.CharField(max_length=255)
     message_content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+
+class Payment(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+class Review(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    rating = models.IntegerField()
+    review_content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+

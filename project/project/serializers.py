@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Teacher, Student, Lesson, Reservation, Notification, UserNew
+from .models import Payment, Review, Teacher, Student, Lesson, Reservation, Notification, UserNew
 #from rest_framework import make_password
 from django.contrib.auth.hashers import make_password
 
@@ -44,4 +44,14 @@ class UserNewSerializer(serializers.ModelSerializer):
     #     #raise serializers.ValidationError(validated_data['password'])
     #     user = super(UserNewSerializer, self).create(validated_data)
     #     return user
+
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = '__all__'
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
 

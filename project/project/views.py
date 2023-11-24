@@ -1,5 +1,5 @@
-from .models import Teacher, Student, Lesson, Reservation, Notification, UserNew
-from .serializers import NotificationSerializer, TeacherSerializer, UserNewSerializer
+from .models import Payment, Review, Teacher, Student, Lesson, Reservation, Notification, UserNew
+from .serializers import NotificationSerializer, PaymentSerializer, ReviewSerializer, TeacherSerializer, UserNewSerializer
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
@@ -90,7 +90,7 @@ def getTeacherNotifications(request, id:int, format=None):
     return Response(serializer.data, safe=False)
 
 
-# Bude vizadovat miesto student_id precitat s requestu o koho ide, resp. bude daco s tokenom    
+# Bude vizadovat miesto student_id precitat s requestu o koho ide, resp. asi bude daco s tokenom    
 # Taktiez spravit ako jednu funkciu s teacherom
 @api_view(['GET'])
 def getStudentNotifications(request,id:int,forma=None): 
@@ -119,4 +119,45 @@ def getAllUsers(request):
     users = UserNew.objects.all()
     serializer = UserNewSerializer(users, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def getAllPayments(request):
+    payments = Payment.objects.all()
+    serializer = PaymentSerializer(payments, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getMyPayments(request,id:int,format=None):
+    student = get_object_or_404(Student,pk=id)
+    payments = Payment.objects.filter(student=student)
+    serializer = PaymentSerializer(payments, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def createPayment(request,id:int,format=None):
+    student = get_object_or_404(Student,pk=id)
+    payment = Payment.objects.create(student=student, teacher=request.data['teacher'], amount=request.data['amount'])
+    serializer = PaymentSerializer(payment, many=False)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getAllReviews(request):
+    reviews = Review.objects.all()
+    serializer = ReviewSerializer(reviews, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getReviews(request,id:int,format=None):
+    teacher = get_object_or_404(Teacher,pk=id)
+    reviews = Review.objects.filter(teacher=teacher.user)
+    serializer = ReviewSerializer(reviews, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def createReview(request,id:int,format=None):
+    student = get_object_or_404(Student,pk=id)
+    review = Review.objects.create(student=student, teacher=request.data['teacher'], rating=request.data['rating'], review_content=request.data['review_content'])
+    serializer = ReviewSerializer(review, many=False)
+    return Response(serializer.data)
+
 
