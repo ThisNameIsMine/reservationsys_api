@@ -43,7 +43,8 @@ def registerUser(request): #TODO
 @api_view(['GET'])
 def loginUser(request):
     data = request.data
-
+    # Retrieve the user based on the provided email
+    # return User.objects.get(email=data['email'])
     try:
         # Retrieve the user based on the provided email
         user = UserNew.objects.get(email=data['email'])
@@ -74,8 +75,6 @@ def loginUser(request):
     #                 credit: 99,
     #             }
     # return user
-
-    
 
 
 @api_view(['GET'])
@@ -120,6 +119,7 @@ def getAllUsers(request):
     serializer = UserNewSerializer(users, many=True)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def getAllPayments(request):
     payments = Payment.objects.all()
@@ -159,5 +159,12 @@ def createReview(request,id:int,format=None):
     review = Review.objects.create(student=student, teacher=request.data['teacher'], rating=request.data['rating'], review_content=request.data['review_content'])
     serializer = ReviewSerializer(review, many=False)
     return Response(serializer.data)
+
+
+#vytvaranie hodin
+# teacher, start_time, end_time, taken_slots, total_slots, language, price, note, list_of_students
+
+#mazanie hodin ak viac ako 24h pred hodinou
+
 
 

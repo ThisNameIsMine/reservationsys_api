@@ -32,6 +32,10 @@ class UserNewSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserNew
         fields = ['id', 'firstName', 'lastName', 'email', 'role','password']
+
+
+        
+
         #extra_kwargs = {'password': {'write_only': True}}  # To exclude the password field from the output
 
     # def create(self, validated_data):
