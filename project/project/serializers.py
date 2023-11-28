@@ -49,6 +49,11 @@ class UserNewSerializer(serializers.ModelSerializer):
     #     user = super(UserNewSerializer, self).create(validated_data)
     #     return user
 
+class UserBacisSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserNew
+        fields = ['id', 'firstName', 'lastName', 'email', 'role','balance']
+
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment

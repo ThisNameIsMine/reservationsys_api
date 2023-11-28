@@ -48,7 +48,7 @@ class Language(models.Model):
 
 # teacher, start_time, end_time, taken_slots, total_slots, language, price, note, list_of_students
 class Lesson(models.Model):
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     taken_slots = models.IntegerField(default=0)
@@ -56,11 +56,11 @@ class Lesson(models.Model):
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=4, decimal_places=2)
     note = models.TextField()
-    list_of_students = models.ManyToManyField(Student, through='Reservation')
+    list_of_students = models.ManyToManyField(UserNew, through='Reservation')
 
 
 class Reservation(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    student = models.ForeignKey(UserNew, on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     reservation_time = models.DateTimeField(auto_now_add=True)
 
@@ -73,16 +73,16 @@ class Notification(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
 class Payment(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    student = models.ForeignKey(UserNew, related_name='payments_as_student', on_delete=models.CASCADE)
+    teacher = models.ForeignKey(UserNew, related_name='payments_as_teacher', on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     timestamp = models.DateTimeField(auto_now_add=True)
     #Add lesson id
 
 
 class Review(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    student = models.ForeignKey(UserNew, related_name='review_as_student', on_delete=models.CASCADE)
+    teacher = models.ForeignKey(UserNew, related_name='review_as_teacher', on_delete=models.CASCADE)
     rating = models.IntegerField()
     review_content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)

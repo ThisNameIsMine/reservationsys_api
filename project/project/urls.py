@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import getTeacherNotifications,getStudentNotifications, loginUser, registerUser, createNotification
+from .views import getNotifications, loginUser, registerUser, createNotification
 from project import views
 
 urlpatterns = [
@@ -24,8 +24,7 @@ urlpatterns = [
     #--- Tested ---
     path('registration/', registerUser, name="registration"),
     path('login/', loginUser, name="login"),
-    path('teachersNotifications/<int:id>', getTeacherNotifications, name='getTeacherNotifications'),
-    path('studentsNotifications/<int:id>', getStudentNotifications, name='getStudentNotifications'),
+    path('notifications/<int:id>', getNotifications, name='getUserNotifications'),    
     path('crtnotify/<int:id>', views.createNotification, name='createNotification'),
     path('allUsers/', views.getAllUsers, name='allUsers'),
     #--- NOT Tested ---
