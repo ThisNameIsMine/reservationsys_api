@@ -44,41 +44,29 @@ def registerUser(request): #TODO
 @api_view(['GET'])
 def loginUser(request):
     data = request.data
+    
     # Retrieve the user based on the provided email
     # return User.objects.get(email=data['email'])
     try:
         # Retrieve the user based on the provided email
         user = UserNew.objects.get(email=data['email'])
+        serializer = UserNewSerializer(user, many=False)
 
+        
         # Check the provided password against the hashed password in the database
-        if check_password(data['password'], user.password):
+        if data['password'] == user.password: #check_password(data['password'], user.password):
             #change return to format {id,name,last_name,email,role,credit}
-
-            if user.role == 'Student':
-                return Response({'message': 'Student login successful', 'role': 'Student'}, status=status.HTTP_200_OK)
-            elif user.role == 'Teacher':
-                return Response({'message': 'Teacher login successful', 'role': 'Teacher'}, status=status.HTTP_200_OK)
-            else:
-                return Response({'message': 'Invalid role'}, status=status.HTTP_403_FORBIDDEN)
-
+            
+            return Response({'message': 'Login successful', 'user': serializer.data}, status=status.HTTP_200_OK)
         else:
             return Response({'message': 'Invalid password'}, status=status.HTTP_401_UNAUTHORIZED)
 
     except UserNew.DoesNotExist:
-        return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-
-    # toto je z fron-endu zobrate, aby som videl co mam vratit
-    #     {
-    #   "status": "success",
-    #   "message": "Login successful",
-    #   “user”: {
-    #    id:1
-    # 	name: “Filip Katusin”,
-    # 	email: “filip.katusin@gmail.com”
-    # 	credit: 99
-    # 	…
-    # }
-    # }
+        return Response({
+            'status':'no_account',
+            'message': 'User not found',
+            'user': ''
+            }, status=status.HTTP_404_NOT_FOUND)  
 
 
 

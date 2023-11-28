@@ -31,7 +31,7 @@ class NotificationSerializer(serializers.ModelSerializer):
 class UserNewSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserNew
-        fields = ['id', 'firstName', 'lastName', 'email', 'role','password']
+        fields = ['id', 'firstName', 'lastName', 'email', 'role','password','balance']
 
 
         

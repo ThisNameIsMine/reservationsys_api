@@ -22,7 +22,7 @@ class UserNew(models.Model):
     last_active = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.firstName + " " + self.lastName + "  " + self.email + " - " + self.role
+        return self.firstName + " " + self.lastName + "  " + self.email + " " + self.role
 
 #================================= Don't use these==================================================
 class Teacher(models.Model):
