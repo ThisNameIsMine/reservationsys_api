@@ -29,6 +29,7 @@ def registerUser(request): #TODO
     # serializer = UserSerializer(user, many=False)
 
     # return Response(serializer.data, safe=False)
+
     serializer = UserNewSerializer(data=request.data)
     
     
@@ -67,14 +68,18 @@ def loginUser(request):
         return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
     # toto je z fron-endu zobrate, aby som videl co mam vratit
-    # const user = {
-    #                 id: '1',
-    #                 name: `${firstName} ${lastName}`,
-    #                 email: email,
-    #                 role: role,
-    #                 credit: 99,
-    #             }
-    # return user
+    #     {
+    #   "status": "success",
+    #   "message": "Login successful",
+    #   “user”: {
+    #    id:1
+    # 	name: “Filip Katusin”,
+    # 	email: “filip.katusin@gmail.com”
+    # 	credit: 99
+    # 	…
+    # }
+    # }
+
 
 
 @api_view(['GET'])
@@ -99,6 +104,7 @@ def getStudentNotifications(request,id:int,forma=None):
     notifications = Notification.objects.filter(user=student.user)
     # Serialize the notifications
     serializer = NotificationSerializer(notifications, many=True)
+    serializer.save()
 
     return Response(serializer.data, safe=False)
 
@@ -110,7 +116,7 @@ def createNotification(request,id,format=None):
     notification = Notification.objects.create(user=user, message_type=request.data['message_type'], message_content=request.data['message_content'])
     # Serialize the notification
     serializer = NotificationSerializer(notification, many=False)
- 
+    serializer.save()
     return Response(serializer.data)
 
 @api_view(['GET'])
@@ -118,6 +124,7 @@ def getAllUsers(request):
     users = UserNew.objects.all()
     serializer = UserNewSerializer(users, many=True)
     return Response(serializer.data)
+
 
 
 @api_view(['GET'])

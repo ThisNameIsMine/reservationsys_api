@@ -16,6 +16,8 @@ class UserNew(models.Model):
         ('admin', 'Admin'),
     ]
     role = models.CharField(max_length=255, choices=ROLES, default='student')
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    
 
     last_active = models.DateTimeField(auto_now_add=True)
 
@@ -40,6 +42,7 @@ class Student(models.Model):
     def __str__(self):
         return self.user.username + " - " + self.last_active
 #===================================================================================================
+
 class Language(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
@@ -56,11 +59,12 @@ class Lesson(models.Model):
     list_of_students = models.ManyToManyField(Student, through='Reservation')
 
 
-
 class Reservation(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     reservation_time = models.DateTimeField(auto_now_add=True)
+
+
 
 class Notification(models.Model):
     user = models.ForeignKey(UserNew, on_delete=models.CASCADE)

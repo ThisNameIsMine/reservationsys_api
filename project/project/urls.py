@@ -21,6 +21,7 @@ from project import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    #--- Tested ---
     path('registration/', registerUser, name="registration"),
     path('login/', loginUser, name="login"),
     path('teachersNotifications/<int:id>', getTeacherNotifications, name='getTeacherNotifications'),

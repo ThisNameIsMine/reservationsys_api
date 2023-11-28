@@ -3,7 +3,8 @@ djangorestframework
 
 
 #Spustenie
-# v priecinku s projektom (v priecinku s manage.py) spustit prikaz : "python manage.py runserver"  (spusti sa na localhost:8000)
+# v priecinku s projektom (v priecinku s manage.py) spustit prikaz :
+" python manage.py runserver "  (spusti sa na localhost:8000)
 # pre tvorbu superusera : python manage.py createsuperuser 
 # pre vytvorenie migracii : python manage.py makemigrations project
 # pre aplikovanie migracii : python manage.py migrate
