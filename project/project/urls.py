@@ -23,16 +23,26 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     #--- Tested ---
     path('registration/', registerUser, name="registration"),
-    path('login/', loginUser, name="login"),
-    path('notifications/<int:id>', getNotifications, name='getUserNotifications'),    
-    path('crtnotify/<int:id>', views.createNotification, name='createNotification'),
+    path('login/', loginUser, name="login"),    
     path('allUsers/', views.getAllUsers, name='allUsers'),
-    #--- NOT Tested ---
-    path('allPayments/', views.getAllPayments, name='allPayments'),
-    path('allReviews/', views.getAllReviews, name='allReviews'),
+    path('crtnotify/<int:id>', views.createNotification, name='createNotification'),
+    path('notifications/<int:id>', getNotifications, name='getUserNotifications'),    
+    path('crtlesson/<int:id>', views.createLesson, name='createLesson'), 
+    path('allLessons/', views.getAllLessons, name='allLessons'),
+    #--- NOT Tested ---    
+    
+    
+    
+     
+           
     path('crtPayment/<int:id>', views.createPayment, name='createPayment'),
+    path('allPayments/', views.getAllPayments, name='allPayments'),
+    
     path('crtReview/<int:id>', views.createReview, name='createReview'),
+    path('allReviews/', views.getAllReviews, name='allReviews'),      
     path('getReviews/<int:id>', views.getReviews, name='getReview'),
+
+    
 
 
 ]

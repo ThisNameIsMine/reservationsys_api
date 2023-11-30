@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 # change on_delete from Cascade to PROTECT ?
 #write a function for all users for registration
 class UserNew(models.Model):
+    id = models.AutoField(primary_key=True)
     firstName = models.CharField(max_length=255)
     lastName = models.CharField(max_length=255)   
     email = models.CharField(max_length=255, unique=True)
@@ -48,15 +49,28 @@ class Language(models.Model):
 
 # teacher, start_time, end_time, taken_slots, total_slots, language, price, note, list_of_students
 class Lesson(models.Model):
-    teacher = models.ForeignKey(User, on_delete=models.CASCADE)
+    languages = [        
+        ('english', 'English'),
+        ('german', 'German'),
+        ('french', 'French'),
+        ('spanish', 'Spanish'),
+        ('italian', 'Italian'),
+        ('russian', 'Russian'),
+        ('chinese', 'Chinese'),
+        ('japanese', 'Japanese'),
+        ('korean', 'Korean'),
+        ('arabic', 'Arabic'),
+    ]
+
+    teacher = models.ForeignKey(UserNew, on_delete=models.CASCADE,related_name='lessons_taught')
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     taken_slots = models.IntegerField(default=0)
     total_slots = models.IntegerField(default=1)
-    language = models.ForeignKey(Language, on_delete=models.CASCADE)
+    language = models.CharField(choices=languages, max_length=100)
     price = models.DecimalField(max_digits=4, decimal_places=2)
-    note = models.TextField()
-    list_of_students = models.ManyToManyField(UserNew, through='Reservation')
+    note = models.TextField(default="")
+    list_of_students = models.ManyToManyField(UserNew, through='Reservation',related_name='lessons_attended')
 
 
 class Reservation(models.Model):
