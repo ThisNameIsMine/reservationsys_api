@@ -55,13 +55,13 @@ def getAllUsers(request):
 
 @api_view(['GET'])
 def getTeachers(request):
-    teachers = UserNew.objects.all(filter(role='teacher'))
+    teachers = UserNew.objects.all().filter(role='teacher')
     serializer = UserBacisSerializer(teachers, many=True)
     return Response({'status':'success','message':'Teachers retrieved','data':serializer.data})
 
 @api_view(['GET'])
 def getStudents(request):
-    students = UserNew.objects.all(filter(role='student'))
+    students = UserNew.objects.all().filter(role='student')
     serializer = UserBacisSerializer(students, many=True)
     return Response({'status':'success','message':'Students retrieved','data':serializer.data})
 
@@ -104,7 +104,7 @@ def getNotifications(request,id:int,forma=None):
 
     return Response({'status':'success','message':'Notifications retrieved','data':serializer.data})
 
-#===================================== NOT TESTED =====================================================
+#============================== TESTED HANDLE CREATION OF LESSON==================================
 
 @api_view(['POST'])
 def createLesson(request,id:int,format=None):
@@ -133,9 +133,7 @@ def createLesson(request,id:int,format=None):
         else:
             return Response({'status':'failed','message':'Lesson not created','data':serializer.errors})
 
-    #lesson = Lesson.objects.create(teacher=teacher, start_time=request.data['start_time'], end_time=request.data['end_time'], taken_slots=request.data['taken_slots'], total_slots=request.data['total_slots'], language=request.data['language'], price=request.data['price'], note=request.data['note'])
-
-    
+    #lesson = Lesson.objects.create(teacher=teacher, start_time=request.data['start_time'], end_time=request.data['end_time'], taken_slots=request.data['taken_slots'], total_slots=request.data['total_slots'], language=request.data['language'], price=request.data['price'], note=request.data['note'])  
 
 @api_view(['GET'])
 def getAllLessons(request):
@@ -143,6 +141,36 @@ def getAllLessons(request):
     serializer = LessonSerializer(lessons, many=True)
     return Response({'status':'success','message':'All lessons retrieved','data':serializer.data})
 
+@api_view(['GET'])
+def getLessons(request,id:int,format=None):
+    if request.data['role'] == 'teacher':
+        teacher = get_object_or_404(UserNew,pk=id)
+        lessons = Lesson.objects.filter(teacher=teacher)        
+    elif request.data['role'] == 'student':
+        student = get_object_or_404(UserNew,pk=id)
+        lessons = Lesson.objects.filter(student=student)
+        
+    serializer = LessonSerializer(lessons, many=True)
+    
+    return Response({'status':'success','message':'Lessons retrieved','data':serializer.data})
+
+# ============================= NOT TESTED - Join lesson ==========================================
+@api_view(['POST'])
+def joinLesson(request,format=None):
+    student = get_object_or_404(UserNew,pk=request.data['id'])
+    lesson = get_object_or_404(Lesson,pk=request.data['lesson'])
+    if lesson.taken_slots < lesson.total_slots:
+        lesson.taken_slots += 1
+        reservation = Reservation.objects.create(student=student, lesson=lesson)
+        reservation.save()
+        
+        lesson.add_to_class('list_of_students', student)
+        lesson.save()
+        
+        serializer = LessonSerializer(lesson, many=False)
+        return Response({'status':'success','message':'Lesson joined','data':serializer.data})
+    else:
+        return Response({'status':'failed','message':'Lesson is full'})
 
 
 # ===================================== Work in progress ==============================================
@@ -159,12 +187,16 @@ def createPayment(request,id:int,format=None):
 def getAllPayments(request):
     payments = Payment.objects.all()
     serializer = PaymentSerializer(payments, many=True)
-    return Response({'status':'success','message':'Payments retrieved','data':serializer.data}, safe=False)
+    return Response({'status':'success','message':'Payments retrieved','data':serializer.data} )
 
 @api_view(['GET'])
-def getMyPayments(request,id:int,format=None):
-    student = get_object_or_404(UserNew,pk=id)
-    payments = Payment.objects.filter(student=student)
+def getUserPayments(request,id:int,format=None):
+    user = get_object_or_404(UserNew,pk=id)
+    if user.role == 'teacher':
+        payments = Payment.objects.filter(teacher=user)
+    elif user.role == 'student':
+        payments = Payment.objects.filter(student=user)
+
     serializer = PaymentSerializer(payments, many=True)
     return Response({'status':'success','message':'Payments retrieved','data':serializer.data})
 
@@ -173,7 +205,7 @@ def getMyPayments(request,id:int,format=None):
 def getAllReviews(request):
     reviews = Review.objects.all()
     serializer = ReviewSerializer(reviews, many=True)
-    return Response({'status':'success','message':'All reviews retrieved','data':serializer.data}, safe=False)
+    return Response({'status':'success','message':'All reviews retrieved','data':serializer.data})
 
 @api_view(['GET'])
 def getReviews(request,id:int,format=None):
