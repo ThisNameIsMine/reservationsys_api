@@ -61,7 +61,7 @@ class Lesson(models.Model):
         ('korean', 'Korean'),
         ('arabic', 'Arabic'),
     ]
-
+    id = models.AutoField(primary_key=True)
     teacher = models.ForeignKey(UserNew, on_delete=models.CASCADE,related_name='lessons_taught')
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
@@ -72,6 +72,7 @@ class Lesson(models.Model):
     note = models.TextField(default="")
     list_of_students = models.ManyToManyField(UserNew, through='Reservation',related_name='lessons_attended')
 
+    
 
 class Reservation(models.Model):
     student = models.ForeignKey(UserNew, on_delete=models.CASCADE)

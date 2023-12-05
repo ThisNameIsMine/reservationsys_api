@@ -157,18 +157,19 @@ def getLessons(request,id:int,format=None):
 # ============================= NOT TESTED - Join lesson ==========================================
 @api_view(['POST'])
 def joinLesson(request,format=None):
-    student = get_object_or_404(UserNew,pk=request.data['id'])
-    lesson = get_object_or_404(Lesson,pk=request.data['lesson'])
+    student = get_object_or_404(UserNew,pk=request.data['uid'])
+    lesson = get_object_or_404(Lesson,pk=request.data['lid'])
     if lesson.taken_slots < lesson.total_slots:
-        lesson.taken_slots += 1
-        reservation = Reservation.objects.create(student=student, lesson=lesson)
-        reservation.save()
-        
-        lesson.add_to_class('list_of_students', student)
-        lesson.save()
-        
-        serializer = LessonSerializer(lesson, many=False)
-        return Response({'status':'success','message':'Lesson joined','data':serializer.data})
+        if lesson.list_of_students.filter(pk=student.id).exists():
+            return Response({'status':'failed','message': 'You are already attending this lesson'}, status=400)
+        else:
+            lesson.taken_slots += 1
+            reservation = Reservation.objects.create(student=student, lesson=lesson)
+            reservation.save()
+            lesson.save()
+            
+            serializer = LessonSerializer(lesson, many=False)
+            return Response({'status':'success','message':'Lesson joined','data':serializer.data})
     else:
         return Response({'status':'failed','message':'Lesson is full'})
 

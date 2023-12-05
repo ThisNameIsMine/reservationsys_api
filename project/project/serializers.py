@@ -16,7 +16,7 @@ class StudentSerializer(serializers.ModelSerializer):
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
-        fields = ['teacher', 'start_time', 'end_time', 'taken_slots', 'total_slots', 'language', 'price', 'note', 'list_of_students']
+        fields = ['id','teacher', 'start_time', 'end_time', 'taken_slots', 'total_slots', 'language', 'price', 'note', 'list_of_students']
 class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation

@@ -34,13 +34,8 @@ urlpatterns = [
 
     path('list/lessons/all', views.getAllLessons, name='getLesson'),
     path('list/lessons/<int:id>', views.getLessons, name='getLesson'),
+    path('joinlesson/', views.joinLesson, name='joinLesson'),
     #--- NOT Tested ---    
-
-    path('joinLesson/', views.joinLesson, name='joinLesson'),
-    
-    
-    
-    #path('getUser/<int:id>', views.getUser, name='getUser'),
 
     path('create/Payment/<int:id>', views.createPayment, name='createPayment'),
     path('list/Payments/all', views.getAllPayments, name='allPayments'),
