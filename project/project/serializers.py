@@ -16,7 +16,7 @@ class StudentSerializer(serializers.ModelSerializer):
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
-        fields = '__all__'
+        fields = ['id','teacher', 'start_time', 'end_time', 'taken_slots', 'total_slots', 'language', 'price', 'note', 'list_of_students']
 class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
@@ -25,13 +25,13 @@ class ReservationSerializer(serializers.ModelSerializer):
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
-        fields = ['timestamp', 'message_content'] #'__all__'
+        fields = ['timestamp', 'message_content','message_type','user'] #'__all__'
 
 
 class UserNewSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserNew
-        fields = ['id', 'firstName', 'lastName', 'email', 'role','password','balance']
+        fields = ['id', 'firstName', 'lastName', 'email', 'role','password','balance','last_active']
 
 
         
@@ -64,3 +64,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = '__all__'
 
+class LessonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = '__all__'

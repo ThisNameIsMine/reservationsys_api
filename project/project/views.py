@@ -1,5 +1,5 @@
 from .models import Payment, Review, Teacher, Student, Lesson, Reservation, Notification, UserNew
-from .serializers import NotificationSerializer, PaymentSerializer, ReviewSerializer, TeacherSerializer, UserBacisSerializer, UserNewSerializer
+from .serializers import LessonSerializer, NotificationSerializer, PaymentSerializer, ReviewSerializer, TeacherSerializer, UserBacisSerializer, UserNewSerializer
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
@@ -47,76 +47,167 @@ def loginUser(request):
             }, status=status.HTTP_404_NOT_FOUND)  
 
 @api_view(['GET'])
+def getAllUsers(request):
+    users = UserNew.objects.all()
+    serializer = UserNewSerializer(users, many=True)
+    #return Response(serializer.data)
+    return Response({'status':'success','message':'Users retrieved','data':serializer.data})
+
+@api_view(['GET'])
 def getTeachers(request):
-    teachers = UserNew.objects.all(filter(role='teacher'))
+    teachers = UserNew.objects.all().filter(role='teacher')
     serializer = UserBacisSerializer(teachers, many=True)
-    return Response(serializer.data)
+    return Response({'status':'success','message':'Teachers retrieved','data':serializer.data})
 
 @api_view(['GET'])
 def getStudents(request):
-    students = UserNew.objects.all(filter(role='student'))
+    students = UserNew.objects.all().filter(role='student')
     serializer = UserBacisSerializer(students, many=True)
-    return Response(serializer.data)
+    return Response({'status':'success','message':'Students retrieved','data':serializer.data})
 
 
 # Bude vizadovat miesto student_id precitat s requestu o koho ide, resp. asi bude daco s tokenom    
 # Taktiez spravit ako jednu funkciu s teacherom
+
+@api_view(['POST'])
+def createNotification(request,id,format=None): # TODO handle sending notifications to multiple users
+    try:
+        # Retrieve the user based on the provided id
+        user = get_object_or_404(UserNew,pk=id)#UserNew.objects.get(id=id)
+
+        # Create a notification for the user
+        notification_data = {
+            'user': user.id,
+            'message_type': 'YourMessageType',  # Provide an appropriate message type
+            'message_content': 'Your message content',  # Provide the content of the notification
+        }
+
+        serializer = NotificationSerializer(data=notification_data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'status':'success','message':'Notification has been created'}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    except UserNew.DoesNotExist:
+        return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
 @api_view(['GET'])
 def getNotifications(request,id:int,forma=None): 
     # Get the Student instance
     usr = get_object_or_404(UserNew,pk=id)
     # Get notifications associated with the student
-    notifications = Notification.objects.filter(user=usr.user)
+    notifications = Notification.objects.filter(user=usr)
     # Serialize the notifications
     serializer = NotificationSerializer(notifications, many=True)
     
 
-    return Response({'status':'success','message':'Notifications retrieved','data':serializer.data}, safe=False)
+    return Response({'status':'success','message':'Notifications retrieved','data':serializer.data})
+
+#============================== TESTED HANDLE CREATION OF LESSON==================================
 
 @api_view(['POST'])
-def createNotification(request,id,format=None): # TODO handle sending notifications to multiple users
-    # Get the user instance
-    user = get_object_or_404(UserNew,pk=id)
-    # Create the notification
-    notification = Notification.objects.create(user=user, message_type=request.data['message_type'], message_content=request.data['message_content'])
-    # Serialize the notification
-    serializer = NotificationSerializer(notification, many=False)
-    serializer.save()
-    return Response({'status':'success','message':'Notification has been created.'})#,serializer.data
+def createLesson(request,id:int,format=None):
+    teacher = get_object_or_404(UserNew,pk=id)
+    print(teacher.id)
+    print(teacher)
+
+
+    if teacher.role != 'teacher':
+        return Response({'status':'failed','message':'Only teachers can create lessons'})
+    else:
+        lesson_data = {
+            'teacher': teacher.pk,
+            'start_time': request.data['start_time'],
+            'end_time': request.data['end_time'],            
+            'total_slots': request.data['total_slots'],
+            'language': request.data['language'],
+            'price': request.data['price'],
+            'note': request.data['note'],
+        }
+        print(lesson_data)
+        Lesson(teacher=teacher, start_time=request.data['start_time'], end_time=request.data['end_time'], total_slots=request.data['total_slots'], language=request.data['language'], price=request.data['price'], note=request.data['note']).save()
+        serializer = LessonSerializer(data=lesson_data, many=False)
+        if serializer.is_valid():            
+            return Response({'status':'success','message':'Lesson created','data':serializer.data})
+        else:
+            return Response({'status':'failed','message':'Lesson not created','data':serializer.errors})
+
+    #lesson = Lesson.objects.create(teacher=teacher, start_time=request.data['start_time'], end_time=request.data['end_time'], taken_slots=request.data['taken_slots'], total_slots=request.data['total_slots'], language=request.data['language'], price=request.data['price'], note=request.data['note'])  
 
 @api_view(['GET'])
-def getAllUsers(request):
-    users = UserNew.objects.all()
-    serializer = UserNewSerializer(users, many=True)
-    #return Response(serializer.data)
-    return Response({'status':'success','message':'Users retrieved','data':serializer.data}, safe=False)
+def getAllLessons(request):
+    lessons = Lesson.objects.all()
+    serializer = LessonSerializer(lessons, many=True)
+    return Response({'status':'success','message':'All lessons retrieved','data':serializer.data})
 
+@api_view(['GET'])
+def getLessons(request,id:int,format=None):
+    if request.data['role'] == 'teacher':
+        teacher = get_object_or_404(UserNew,pk=id)
+        lessons = Lesson.objects.filter(teacher=teacher)        
+    elif request.data['role'] == 'student':
+        student = get_object_or_404(UserNew,pk=id)
+        lessons = Lesson.objects.filter(student=student)
+        
+    serializer = LessonSerializer(lessons, many=True)
+    
+    return Response({'status':'success','message':'Lessons retrieved','data':serializer.data})
+
+# ============================= NOT TESTED - Join lesson ==========================================
+@api_view(['POST'])
+def joinLesson(request,format=None):
+    student = get_object_or_404(UserNew,pk=request.data['uid'])
+    lesson = get_object_or_404(Lesson,pk=request.data['lid'])
+    print('student: ',student.id,'lesson: ',lesson.id)
+    if lesson.taken_slots < lesson.total_slots:
+        if lesson.list_of_students.filter(pk=student.id).exists():
+            return Response({'status':'failed','message': 'You are already attending this lesson'}, status=400)
+        else:
+            lesson.taken_slots += 1
+            reservation = Reservation.objects.create(student=student, lesson=lesson)
+            reservation.save()
+            lesson.save()
+            
+            serializer = LessonSerializer(lesson, many=False)
+            return Response({'status':'success','message':'Lesson joined','data':serializer.data})
+    else:
+        return Response({'status':'failed','message':'Lesson is full'})
+
+
+# ===================================== Work in progress ==============================================
+
+@api_view(['POST'])
+def createPayment(request,id:int,format=None):
+    student = get_object_or_404(UserNew,pk=id)
+    teacher = get_object_or_404(UserNew,pk=request.data['teacher'])
+    payment = Payment.objects.create(student=student, teacher=teacher, amount=request.data['amount'])
+    serializer = PaymentSerializer(payment, many=False) 
+    return Response({'status':'success','message':'Payment created','data':serializer.data})
 
 @api_view(['GET'])
 def getAllPayments(request):
     payments = Payment.objects.all()
     serializer = PaymentSerializer(payments, many=True)
-    return Response({'status':'success','message':'Payments retrieved','data':serializer.data}, safe=False)
+    return Response({'status':'success','message':'Payments retrieved','data':serializer.data} )
 
 @api_view(['GET'])
-def getMyPayments(request,id:int,format=None):
-    student = get_object_or_404(UserNew,pk=id)
-    payments = Payment.objects.filter(student=student)
+def getUserPayments(request,id:int,format=None):
+    user = get_object_or_404(UserNew,pk=id)
+    if user.role == 'teacher':
+        payments = Payment.objects.filter(teacher=user)
+    elif user.role == 'student':
+        payments = Payment.objects.filter(student=user)
+
     serializer = PaymentSerializer(payments, many=True)
     return Response({'status':'success','message':'Payments retrieved','data':serializer.data})
 
-@api_view(['POST'])
-def createPayment(request,id:int,format=None):
-    student = get_object_or_404(UserNew,pk=id)
-    payment = Payment.objects.create(student=student, teacher=request.data['teacher'], amount=request.data['amount'])
-    serializer = PaymentSerializer(payment, many=False)
-    return Response({'status':'success','message':'Payment created','data':serializer.data})
 
 @api_view(['GET'])
 def getAllReviews(request):
     reviews = Review.objects.all()
     serializer = ReviewSerializer(reviews, many=True)
-    return Response({'status':'success','message':'All reviews retrieved','data':serializer.data}, safe=False)
+    return Response({'status':'success','message':'All reviews retrieved','data':serializer.data})
 
 @api_view(['GET'])
 def getReviews(request,id:int,format=None):
