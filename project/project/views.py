@@ -159,6 +159,7 @@ def getLessons(request,id:int,format=None):
 def joinLesson(request,format=None):
     student = get_object_or_404(UserNew,pk=request.data['uid'])
     lesson = get_object_or_404(Lesson,pk=request.data['lid'])
+    print('student: ',student.id,'lesson: ',lesson.id)
     if lesson.taken_slots < lesson.total_slots:
         if lesson.list_of_students.filter(pk=student.id).exists():
             return Response({'status':'failed','message': 'You are already attending this lesson'}, status=400)
