@@ -88,6 +88,7 @@ class Notification(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
 class Payment(models.Model):
+    id = models.AutoField(primary_key=True)
     student = models.ForeignKey(UserNew, related_name='payments_as_student', on_delete=models.CASCADE)
     teacher = models.ForeignKey(UserNew, related_name='payments_as_teacher', on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)

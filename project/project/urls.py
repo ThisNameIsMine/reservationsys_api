@@ -41,9 +41,9 @@ urlpatterns = [
     path('list/Payments/all', views.getAllPayments, name='allPayments'),
     path('list/Payments/<int:id>', views.getUserPayments, name='getPayment'),
     
-    path('crtReview/<int:id>', views.createReview, name='createReview'),
-    path('allReviews/', views.getAllReviews, name='allReviews'),      
-    path('getReviews/<int:id>', views.getReviews, name='getReview'),
+    path('create/Review/<int:id>', views.createReview, name='createReview'),
+    path('list/Reviews/all', views.getAllReviews, name='allReviews'),      
+    path('list/Reviews/<int:id>', views.getReviews, name='getReview'),
 
     
 
