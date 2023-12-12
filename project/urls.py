@@ -24,18 +24,26 @@ urlpatterns = [
     #--- Tested ---
     path('registration/', registerUser, name="registration"),
     path('login/', loginUser, name="login"),    
-    path('list/users/', views.getAllUsers, name='allUsers'),
-    path('create/notification/<int:id>', views.createNotification, name='createNotification'),
-    path('list/notifications/<int:id>', getNotifications, name='getUserNotifications'),    
-    path('create/lesson/<int:id>', views.createLesson, name='createLesson'), 
-    path('list/lessons/all', views.getAllLessons, name='allLessons'),
+    path('list/users/all', views.getAllUsers, name='allUsers'),
+
     path('list/teachers/', views.getTeachers, name='getTeachers'),
     path('list/students/', views.getStudents, name='getStudents'),
 
+    path('create/lesson/<int:id>', views.createLesson, name='createLesson'), 
     path('list/lessons/all', views.getAllLessons, name='getLesson'),
     path('list/lessons/<int:id>', views.getLessons, name='getLesson'),
+
+    path('create/notification/<int:id>', views.createNotification, name='createNotification'),
+    path('list/notifications/<int:id>', getNotifications, name='getUserNotifications'),    
     path('joinlesson/', views.joinLesson, name='joinLesson'),
-    #--- NOT Tested ---    
+    
+    
+
+    
+    
+    #--- NOT Tested ---            
+    #path('', views.getInfo, name='info'),
+
 
     path('create/Payment/<int:id>', views.createPayment, name='createPayment'),
     path('list/Payments/all', views.getAllPayments, name='allPayments'),

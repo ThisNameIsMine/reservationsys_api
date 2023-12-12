@@ -1,0 +1,375 @@
+openapi: '3.0.2'
+info:
+  title: ReservationAPI
+  description: API documentation for ReservationAPI
+  version: '1.0'
+servers:
+  - url: https://reservation-api-y8s8.onrender.com/
+    
+paths:
+  /registration/:
+    post:
+      summary: User Registration
+      description: Register a new user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  description: First name of the user.
+                lastName:
+                  type: string
+                  description: Last name of the user.
+                email:
+                  type: string
+                  format: email
+                  description: Email address of the user.
+                role:
+                  type: string
+                  enum: [student, teacher]
+                  description: Role of the user (student or teacher) Default student.
+                password:
+                  type: string
+                  description: User password.
+              required:
+                - firstName
+                - lastName
+                - email
+                - role
+                - password
+      responses:
+        '201':
+          description: User registered successfully.
+          content:
+            application/json:
+              example:
+                status: success
+                message: User registered successfully
+        '400':
+          description: Bad Request. Registration failed.
+          content:
+            application/json:
+              example:
+                status: failed
+                message: Invalid data. Please check the input.
+  /login/:
+    post:
+      summary: User Login
+      description: Log in an existing user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: Email address of the user.
+                password:
+                  type: string
+                  description: User password.
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: Login successful.
+          content:
+            application/json:
+              example:
+                status: success
+                message: Login successful
+                user:
+                  id: 123
+                  firstName: Jozin
+                  lastName: Zbazin
+                  email: jozin@mail.com
+                  role: student
+                  password: "for debuging purposes" # Do not expose the password in the response
+                  balance: 0
+                  last_active: "2023-01-01T12:34:56Z"
+        '401':
+          description: Unauthorized. Invalid password.
+          content:
+            application/json:
+              example:
+                status: failed
+                message: Invalid password
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              example:
+                status: failed
+                message: User not found
+  /list/users/all/:
+    get:
+      summary: List Users
+      description: Retrieve a list of all users.
+      responses:
+        '200':
+          description: Users retrieved successfully.
+          content:
+            application/json:
+              example:
+                status: success
+                message: Users retrieved
+                data:
+                  - id: 123
+                    firstName: Jozin
+                    lastName: Zbazin
+                    email: jozin@mail.com
+                    role: student
+                    password: ""  # Do not expose the password in the response
+                    balance: 0
+                    last_active: "2023-01-01T12:34:56Z"
+                  - id: 456
+                    firstName: Another
+                    lastName: User
+                    email: another@mail.com
+                    role: teacher
+                    password: ""  # Do not expose the password in the response
+                    balance: 50
+                    last_active: "2023-01-02T08:45:00Z"
+        '404':
+          description: No users found.
+          content:
+            application/json:
+              example:
+                status: success
+                message: No users found
+  /list/teachers/:
+    get:
+      summary: List Teachers
+      description: Retrieve a list of all users with role teacher.
+      responses:
+        '200':
+          description: Teachers retrieved successfully.
+          content:
+            application/json:
+              example:
+                status: success
+                message: Teachers retrieved
+                data:
+                  - id: 456
+                    firstName: Another
+                    lastName: User
+                    email: another@mail.com
+  /list/students/:
+    get:
+      summary: List Students
+      description: Retrieve a list of all users with role student.
+      responses:
+        '200':
+          description: Students retrieved successfully.
+          content:
+            application/json:
+              example:
+                status: success
+                message: Students retrieved
+                data:
+                  - id: 123
+                    firstName: Jozin
+                    lastName: Zbazin
+                    email: jozin@mail.com
+  /create/lesson/<int:id>/:
+    post:
+      summary: Create Lesson
+      description: Create a new lesson.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the teacher.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_time:                  
+                  type: string
+                  format: date and time
+                  description: Date and time of the begining of lesson.
+                end_time:
+                  type: string
+                  format: date and time
+                  description: Date and time of the end of the lesson.
+                total_slots:
+                  type: integer
+                  description: Total number of slots in the lesson.
+                price:
+                  type: integer
+                  description: Price of the lesson in CZK.
+                language:
+                  type: string
+                  description: Language of the lesson.
+                note:
+                  type: string
+                  description: Note for the lesson.
+              required:
+                - start_time
+                - end_time
+                - total_slots
+                - price
+                - language
+                - note                
+      responses:
+        '201':
+          description: Lesson created successfully.
+          content:
+            application/json:
+              example:
+                status: success
+                message: Lesson created successfully.
+        '400':
+          description: Bad Request. Lesson creation failed.
+          content:
+            application/json:
+              example:
+                status: failed
+                message: Only teachers can create lessons.
+  /list/lessons/all/:
+    get:
+      summary: List Lessons
+      description: Retrieve a list of all lessons.
+      responses:
+        '200':
+          description: Lessons retrieved successfully.
+          content:
+            application/json:
+              example:
+                status: success
+                message: Lessons retrieved
+                data:
+                  - id: 123
+                    teacher_id: 456
+                    start_time: "2023-01-01T12:34:56Z"
+                    end_time: "2023-01-01T13:34:56Z"
+                    total_slots: 10
+                    slots_taken: 3
+                    price: 100
+                    language: English
+                    note: Note for the lesson
+                    
+                    
+                  - id: 456
+                    teacher_id: 789
+                    start_time: "2023-01-02T08:45:00Z"
+                    end_time: "2023-01-02T09:45:00Z"
+                    total_slots: 5
+                    slots_taken: 5
+                    price: 50
+                    language: German
+                    note: Note for the lesson
+                    
+                    
+        '404':
+          description: No lessons found.
+          content:
+            application/json:
+              example:
+                status: success
+                message: No lessons found
+  /list/lessons/<int:id>/:
+    get:
+      summary: List Lessons of user
+      description: Retrieve a list of lessons - if user is teacher - list all lessons created by teacher, if user is student - list all lessons attended by student
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the user.
+      responses:
+        '200':
+          description: Lessons retrieved successfully.
+          content:
+            application/json:
+              example:
+                status: success
+                message: Lessons retrieved
+                data:
+                  - id: 123
+                    teacher_id: 456
+                    start_time: "2023-01-01T12:34:56Z"
+                    end_time: "2023-01-01T13:34:56Z"
+                    total_slots: 10
+                    slots_taken: 3
+                    price: 100
+                    language: English
+                    note: Note for the lesson
+                    
+                    
+                  - id: 456
+                    teacher_id: 789
+                    start_time: "2023-01-02T08:45:00Z"
+                    end_time: "2023-01-02T09:45:00Z"
+                    total_slots: 5
+                    slots_taken: 5
+                    price: 50
+                    language: German
+                    note: Note for the lesson
+                    
+                    
+        '404':
+          description: No lessons found.
+          content:
+            application/json:
+              example:
+                status: success
+                message: No lessons found
+  /joinlesson/:
+    post:
+      summary: Join Lesson
+      description: Join a lesson with provided id.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lesson_id:
+                  type: integer
+                  description: ID of the lesson.
+                student_id:
+                  type: integer
+                  description: ID of the student.
+              required:
+                - lesson_id
+                - student_id
+      responses:
+        '201':
+          description: Lesson joined successfully.
+          content:
+            application/json:
+              example:
+                status: success
+                message: Lesson joined successfully.
+        '400':
+          description: Bad Request. Lesson join failed.
+          content:
+            application/json:
+              example:
+                status: failed
+                message: Lesson join failed.
+        '404':
+          description: Lesson or student not found.
+          content:
+            application/json:
+              example:
+                status: failed
+                message: Lesson or student not found.
+
+

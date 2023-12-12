@@ -37,7 +37,7 @@ def loginUser(request):
             
             return Response({'status':'success','message': 'Login successful', 'user': serializer.data}, status=status.HTTP_200_OK)
         else:
-            return Response({'message': 'Invalid password'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'status':'fail','message': 'Invalid password'}, status=status.HTTP_401_UNAUTHORIZED)
 
     except UserNew.DoesNotExist:
         return Response({
@@ -156,7 +156,7 @@ def getLessons(request,id:int,format=None):
 
 # ============================= NOT TESTED - Join lesson ==========================================
 @api_view(['POST'])
-def joinLesson(request,format=None):
+def joinLesson(request,format=None):#,id:int
     student = get_object_or_404(UserNew,pk=request.data['uid'])
     lesson = get_object_or_404(Lesson,pk=request.data['lid'])
     print('student: ',student.id,'lesson: ',lesson.id)
