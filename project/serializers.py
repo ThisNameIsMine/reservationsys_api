@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Payment, Review, Teacher, Student, Lesson, Reservation, Notification, UserNew
+from .models import Payment, Review, Teacher, Student, Lesson, Reservation, Notification, UserNew, PromoCode
 #from rest_framework import make_password
 from django.contrib.auth.hashers import make_password
 
@@ -67,4 +67,10 @@ class ReviewSerializer(serializers.ModelSerializer):
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
+        fields = '__all__'
+
+#prmocode
+class PromoCodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PromoCode
         fields = '__all__'

@@ -1,10 +1,11 @@
-from .models import Payment, Review, Teacher, Student, Lesson, Reservation, Notification, UserNew
-from .serializers import LessonSerializer, NotificationSerializer, PaymentSerializer, ReviewSerializer, TeacherSerializer, UserBacisSerializer, UserNewSerializer
+from .models import Payment, Review, Teacher, Student, Lesson, Reservation, Notification, UserNew, PromoCode
+from .serializers import LessonSerializer, NotificationSerializer, PaymentSerializer, ReviewSerializer, TeacherSerializer, UserBacisSerializer, UserNewSerializer, PromoCodeSerializer
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import check_password
+import secrets
 
 
 
@@ -229,5 +230,33 @@ def createReview(request,id:int,format=None):
 
 #mazanie hodin ak viac ako 24h pred hodinou
 
+#promocodes
 
+@api_view(['POST'])
+def generatePromoCode(request):
+    amount = request.data.get('amount')
+    length = 16
+    code =  secrets.token_hex(length//2)[:length]
+    promo_code = PromoCode.objects.create(amount=amount,code=code)
+    serializer = PromoCodeSerializer(promo_code,many=False)
+    return Response({'status':'success','message':'PromoCode created','data':serializer.data})
 
+@api_view(['POST'])
+def applyPromoCodeToUser(request,id:int):
+    promoCodeStr = request.data.get('promo_code')
+    #user_id = request.data.get('user_id')
+    # Assuming promo_code_str and user_id are always provided
+    promoCode = get_object_or_404(PromoCode, code=promoCodeStr, status=True)
+    user = get_object_or_404(UserNew, pk=id)
+
+    # Assuming promo_code and user are always found
+    if not promoCode.is_used:
+        user.balance += promoCode.amount
+        user.save()
+
+        promoCode.is_used = True
+        promoCode.save()
+
+        return Response({'status':'success','message':'PromoCode used'})
+    else:
+        return Response({'status':'failed','message':'invalid PromoCode'})

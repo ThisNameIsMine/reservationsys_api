@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import getNotifications, loginUser, registerUser, createNotification
+from .views import getNotifications, loginUser, registerUser, createNotification, generatePromoCode, applyPromoCodeToUser
 from project import views
 
 urlpatterns = [
@@ -53,7 +53,9 @@ urlpatterns = [
     path('list/Reviews/all', views.getAllReviews, name='allReviews'),      
     path('list/Reviews/<int:id>', views.getReviews, name='getReview'),
 
-    
+    #prmocodes --- NOT Tested ---   
+     path('create/PromoCode/', views.generatePromoCode, name='createReview'),
+     path('apply/PromoCode/', views.applyPromoCodeToUser, name='createReview'),
 
 
 ]
