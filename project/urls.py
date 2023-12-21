@@ -37,8 +37,9 @@ urlpatterns = [
     path('list/notifications/<int:id>', getNotifications, name='getUserNotifications'),    
     path('joinlesson/', views.joinLesson, name='joinLesson'),
     
-    
-
+    path('create/PromoCode/', views.generatePromoCode, name='createPromoCode'),
+    path('list/PromoCode/all', views.getAllPromoCodes, name='allPromoCodes'),
+    path('use/PromoCode/<int:id>', views.applyPromoCodeToUser, name='usePromoCode'), 
     
     
     #--- NOT Tested ---            
@@ -53,9 +54,7 @@ urlpatterns = [
     path('list/Reviews/all', views.getAllReviews, name='allReviews'),      
     path('list/Reviews/<int:id>', views.getReviews, name='getReview'),
 
-    #prmocodes --- NOT Tested ---   
-     path('create/PromoCode/', views.generatePromoCode, name='createReview'),
-     path('apply/PromoCode/', views.applyPromoCodeToUser, name='createReview'),
+    
 
 
 ]
