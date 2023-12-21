@@ -1,10 +1,11 @@
-from .models import Payment, Review, Teacher, Student, Lesson, Reservation, Notification, UserNew
-from .serializers import LessonSerializer, NotificationSerializer, PaymentSerializer, ReviewSerializer, TeacherSerializer, UserBacisSerializer, UserNewSerializer
+from .models import Payment, Review, Teacher, Student, Lesson, Reservation, Notification, UserNew, PromoCode
+from .serializers import LessonSerializer, NotificationSerializer, PaymentSerializer, ReviewSerializer, TeacherSerializer, UserBacisSerializer, UserNewSerializer, PromoCodeSerializer
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import check_password
+import secrets
 
 
 
@@ -229,5 +230,33 @@ def createReview(request,id:int,format=None):
 
 #mazanie hodin ak viac ako 24h pred hodinou
 
+#promocodes
+@api_view(['POST'])
+def generatePromoCode(request,format=None):    
+    amount = request.data['amount']
+    length = 16
+    code =  secrets.token_hex(length//2)[:length]
+    promocode = PromoCode.objects.create(amount=amount, code=code)
+    serializer = PromoCodeSerializer(promocode, many=False)
+    return Response({'status':'success','message':'PromoCode created','data':serializer.data})
+
+@api_view(['GET'])
+def getAllPromoCodes(request):
+    promocodes = PromoCode.objects.all()
+    serializer = PromoCodeSerializer(promocodes, many=True)
+    return Response({'status':'success','message':'All PromoCodes retrieved','data':serializer.data})
+
+@api_view(['POST'])
+def applyPromoCodeToUser(request,id:int,format=None):        
+    user = get_object_or_404(UserNew,pk=id)                  
+    promocode = get_object_or_404(PromoCode,code=request.data['code'])
+    if promocode.used:
+        return Response({'status':'failed','message':'PromoCode already used'})
+    else:
+        user.balance += promocode.amount
+        user.save()
+        promocode.used = True
+        promocode.save()
+        return Response({'status':'success','message':'PromoCode used'})
 
 

@@ -41,3 +41,4 @@ env/
 *.sqlite3
 
 .venv
+/project/settings.py
