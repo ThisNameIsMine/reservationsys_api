@@ -7,7 +7,7 @@ servers:
   - url: https://reservation-api-y8s8.onrender.com/
     
 paths:
-  /registration/:
+  /registration:
     post:
       summary: User Registration
       description: Register a new user.
@@ -108,7 +108,7 @@ paths:
               example:
                 status: failed
                 message: User not found
-  /list/users/all/:
+  /list/users/all:
     get:
       summary: List Users
       description: Retrieve a list of all users.
@@ -144,7 +144,7 @@ paths:
               example:
                 status: success
                 message: No users found
-  /list/teachers/:
+  /list/teachers:
     get:
       summary: List Teachers
       description: Retrieve a list of all users with role teacher.
@@ -161,7 +161,7 @@ paths:
                     firstName: Another
                     lastName: User
                     email: another@mail.com
-  /list/students/:
+  /list/students:
     get:
       summary: List Students
       description: Retrieve a list of all users with role student.
@@ -178,7 +178,7 @@ paths:
                     firstName: Jozin
                     lastName: Zbazin
                     email: jozin@mail.com
-  /create/lesson/<int:id>/:
+  /create/lesson/<int:id>:
     post:
       summary: Create Lesson
       description: Create a new lesson.
@@ -238,7 +238,7 @@ paths:
               example:
                 status: failed
                 message: Only teachers can create lessons.
-  /list/lessons/all/:
+  /list/lessons/all:
     get:
       summary: List Lessons
       description: Retrieve a list of all lessons.
@@ -280,7 +280,7 @@ paths:
               example:
                 status: success
                 message: No lessons found
-  /list/lessons/<int:id>/:
+  /list/lessons/<int:id>:
     get:
       summary: List Lessons of user
       description: Retrieve a list of lessons - if user is teacher - list all lessons created by teacher, if user is student - list all lessons attended by student
@@ -329,7 +329,7 @@ paths:
               example:
                 status: success
                 message: No lessons found
-  /joinlesson/:
+  /joinlesson:
     post:
       summary: Join Lesson
       description: Join a lesson with provided id.
