@@ -22,12 +22,12 @@ from project import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     #--- Tested ---
-    path('registration/', registerUser, name="registration"),
-    path('login/', loginUser, name="login"),    
+    path('registration', registerUser, name="registration"),
+    path('login', loginUser, name="login"),    
     path('list/users/all', views.getAllUsers, name='allUsers'),
 
-    path('list/teachers/', views.getTeachers, name='getTeachers'),
-    path('list/students/', views.getStudents, name='getStudents'),
+    path('list/teachers', views.getTeachers, name='getTeachers'),
+    path('list/students', views.getStudents, name='getStudents'),
 
     path('create/lesson/<int:id>', views.createLesson, name='createLesson'), 
     path('list/lessons/all', views.getAllLessons, name='getLesson'),
@@ -35,9 +35,9 @@ urlpatterns = [
 
     path('create/notification/<int:id>', views.createNotification, name='createNotification'),
     path('list/notifications/<int:id>', getNotifications, name='getUserNotifications'),    
-    path('joinlesson/', views.joinLesson, name='joinLesson'),
+    path('joinlesson', views.joinLesson, name='joinLesson'),
     
-    path('create/PromoCode/', views.generatePromoCode, name='createPromoCode'),
+    path('create/PromoCode', views.generatePromoCode, name='createPromoCode'),
     path('list/PromoCode/all', views.getAllPromoCodes, name='allPromoCodes'),
     path('use/PromoCode/<int:id>', views.applyPromoCodeToUser, name='usePromoCode'), 
     
@@ -54,7 +54,10 @@ urlpatterns = [
     path('list/Reviews/all', views.getAllReviews, name='allReviews'),      
     path('list/Reviews/<int:id>', views.getReviews, name='getReview'),
 
-    
+    #TODO rating of teacher/student
+    # path('create/Rating/<int:id>', views.createRating, name='createRating'),
+    # path('list/Ratings/all', views.getAllRatings, name='allRatings'),
+    # path('list/Ratings/<int:id>', views.getRatings, name='getRating'),
 
 
 ]

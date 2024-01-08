@@ -45,7 +45,7 @@ def loginUser(request):
             'status':'no_account',
             'message': 'User not found',
             'user': ''
-            }, status=status.HTTP_404_NOT_FOUND)  
+            }, status=status.HTTP_200_OK)  
 
 @api_view(['GET'])
 def getAllUsers(request):

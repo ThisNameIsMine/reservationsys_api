@@ -56,8 +56,8 @@ paths:
               example:
                 status: failed
                 message: Invalid data. Please check the input.
-  /login/:
-    post:
+  /login:
+    get:
       summary: User Login
       description: Log in an existing user.
       requestBody:

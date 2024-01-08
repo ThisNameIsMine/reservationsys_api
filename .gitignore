@@ -42,3 +42,11 @@ env/
 
 .venv
 /project/settings.py
+project/__pycache__/models.cpython-311.pyc
+project/__pycache__/models.cpython-311.pyc
+project/__pycache__/serializers.cpython-311.pyc
+project/__pycache__/settings.cpython-311.pyc
+project/__pycache__/urls.cpython-311.pyc
+project/__pycache__/views.cpython-311.pyc
+project/migrations/__pycache__/0006_promocode.cpython-311.pyc
+project/migrations/__pycache__/0007_rename_status_promocode_used_alter_promocode_id.cpython-311.pyc
