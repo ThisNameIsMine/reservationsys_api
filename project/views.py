@@ -148,7 +148,13 @@ def getLessons(request,id:int,format=None):
     if user.role == 'teacher':            
         lessons = Lesson.objects.filter(teacher=user)        
     elif user.role == 'student':        
-        lessons = Lesson.objects.filter(student=user)
+        allLesons = Lesson.objects.all()
+        lessons =[]
+        for lesson in allLesons:
+            if lesson.list_of_students.filter(pk=user.id).exists():
+                lessons.append(lesson)
+            
+        #lessons = Lesson.objects.filter(student=user)
         
     serializer = LessonSerializer(lessons, many=True)
     
