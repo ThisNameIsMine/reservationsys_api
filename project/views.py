@@ -144,12 +144,11 @@ def getAllLessons(request):
 
 @api_view(['GET'])
 def getLessons(request,id:int,format=None):
-    if request.data['role'] == 'teacher':
-        teacher = get_object_or_404(UserNew,pk=id)
-        lessons = Lesson.objects.filter(teacher=teacher)        
-    elif request.data['role'] == 'student':
-        student = get_object_or_404(UserNew,pk=id)
-        lessons = Lesson.objects.filter(student=student)
+    user = get_object_or_404(UserNew,pk=id)
+    if user.role == 'teacher':            
+        lessons = Lesson.objects.filter(teacher=user)        
+    elif user.role == 'student':        
+        lessons = Lesson.objects.filter(student=user)
         
     serializer = LessonSerializer(lessons, many=True)
     
