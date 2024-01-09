@@ -166,8 +166,8 @@ def getLessons(request,id:int,format=None):
 # ============================= NOT TESTED - Join lesson ==========================================
 @api_view(['POST'])
 def joinLesson(request,format=None):#,id:int
-    student = get_object_or_404(UserNew,pk=request.data['uid'])
-    lesson = get_object_or_404(Lesson,pk=request.data['lid'])
+    student = get_object_or_404(UserNew,pk=request.data['student_id'])
+    lesson = get_object_or_404(Lesson,pk=request.data['lesson_id'])
     print('student: ',student.id,'lesson: ',lesson.id)
     if lesson.taken_slots < lesson.total_slots:
         if lesson.list_of_students.filter(pk=student.id).exists():
