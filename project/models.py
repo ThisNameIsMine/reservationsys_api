@@ -68,7 +68,7 @@ class Lesson(models.Model):
     taken_slots = models.IntegerField(default=0)
     total_slots = models.IntegerField(default=1)
     language = models.CharField(choices=languages, max_length=100)
-    price = models.DecimalField(max_digits=4, decimal_places=2)
+    price = models.DecimalField(max_digits=7, decimal_places=2)
     note = models.TextField(default="")
     list_of_students = models.ManyToManyField(UserNew, through='Reservation',related_name='lessons_attended')
 

@@ -118,7 +118,7 @@ def createLesson(request,id:int,format=None):
         return Response({'status':'failed','message':'Only teachers can create lessons'})
     else:
         lesson_data = {
-            'teacher': teacher.pk,
+            'teacher': teacher,
             'start_time': request.data['start_time'],
             'end_time': request.data['end_time'],            
             'total_slots': request.data['total_slots'],
@@ -157,6 +157,9 @@ def getLessons(request,id:int,format=None):
         #lessons = Lesson.objects.filter(student=user)
         
     serializer = LessonSerializer(lessons, many=True)
+    for lesson in lessons:
+        print(type(serializer))
+        #lesson.teacher = UserBacisSerializer(lesson.teacher, many=False).data
     
     return Response({'status':'success','message':'Lessons retrieved','data':serializer.data})
 
