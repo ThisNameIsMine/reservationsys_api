@@ -406,7 +406,7 @@ paths:
               example:
                 status: fail
                 message: You cannot leave the lesson less than 24h before it starts
-  /list/Languages:
+  /list/languages:
       get:
         summary: Retrieve the list of language values
         responses:

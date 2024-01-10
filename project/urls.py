@@ -38,18 +38,18 @@ urlpatterns = [
     path('joinlesson', views.joinLesson, name='joinLesson'),
     path('leavelesson', views.leaveLesson, name='leaveLesson'),
 
-    path('create/PromoCode', views.generatePromoCode, name='createPromoCode'),
-    path('list/PromoCode/all', views.getAllPromoCodes, name='allPromoCodes'),
-    path('use/PromoCode/<int:id>', views.applyPromoCodeToUser, name='usePromoCode'), 
+    path('create/promoCode', views.generatePromoCode, name='createPromoCode'),
+    path('list/promoCode/all', views.getAllPromoCodes, name='allPromoCodes'),
+    path('use/promoCode/<int:id>', views.applyPromoCodeToUser, name='usePromoCode'), 
     
     
     #--- NOT Tested ---            
     #path('', views.getInfo, name='info'),
-    path('list/Languages', views.getLanguages, name='getLanguages'),
+    path('list/languages', views.getLanguages, name='getLanguages'),
 
-    path('create/Review/<int:id>', views.createReview, name='createReview'),
-    path('list/Reviews/all', views.getAllReviews, name='allReviews'),      
-    path('list/Reviews/<int:id>', views.getReviews, name='getReview'),
+    path('create/review/<int:id>', views.createReview, name='createReview'),
+    path('list/reviews/all', views.getAllReviews, name='allReviews'),      
+    path('list/reviews/<int:id>', views.getReviews, name='getReview'),
 
     # Handle on Backend
     # path('create/Payment/<int:id>', views.createPayment, name='createPayment'),
