@@ -35,6 +35,8 @@ urlpatterns = [
 
     path('create/notification/<int:id>', views.createNotification, name='createNotification'),
     path('list/notifications/<int:id>', getNotifications, name='getUserNotifications'),    
+    path('list/notifications/all', views.getAllNotifications, name='allNotifications'),
+
     path('joinlesson', views.joinLesson, name='joinLesson'),
     path('leavelesson', views.leaveLesson, name='leaveLesson'),
 

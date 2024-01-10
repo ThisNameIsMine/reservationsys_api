@@ -102,9 +102,14 @@ def getNotifications(request,id:int,forma=None):
     notifications = Notification.objects.filter(user=usr)
     # Serialize the notifications
     serializer = NotificationSerializer(notifications, many=True)
-    
 
     return Response({'status':'success','message':'Notifications retrieved','data':serializer.data})
+
+@api_view(['GET'])
+def getAllNotifications(request):
+    notifications = Notification.objects.all()
+    serializer = NotificationSerializer(notifications, many=True)
+    return Response({'status':'success','message':'All notifications retrieved','data':serializer.data})
 
 #============================== TESTED HANDLE CREATION OF LESSON==================================
 
