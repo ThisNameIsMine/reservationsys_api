@@ -57,7 +57,7 @@ paths:
                 status: failed
                 message: Invalid data. Please check the input.
   /login:
-    get:
+    post:
       summary: User Login
       description: Log in an existing user.
       requestBody:
@@ -371,5 +371,38 @@ paths:
               example:
                 status: failed
                 message: Lesson or student not found.
-
-
+  /leavelesson:
+    post:
+      summary: Leave Lesson
+      description: Leave a lesson.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                student_id:
+                  type: integer
+                  description: The ID of the student.
+                lesson_id:
+                  type: integer
+                  description: The ID of the lesson.
+              required:
+                - student_id
+                - lesson_id
+      responses:
+        '200':
+          description: Lesson left successfully.
+          content:
+            application/json:
+              example:
+                status: success
+                message: Lesson left
+        '400':
+          description: (Status is 200) Invalid input. Cannot leave lesson less than 24h before it starts.
+          content:
+            application/json:
+              example:
+                status: fail
+                message: You cannot leave the lesson less than 24h before it starts

@@ -43,6 +43,7 @@ class Lesson(models.Model):
         ('japanese', 'Japanese'),
         ('korean', 'Korean'),
         ('arabic', 'Arabic'),
+        ('slovak', 'Slovak'),
     ]
     id = models.AutoField(primary_key=True)
     teacher = models.ForeignKey(UserNew, on_delete=models.CASCADE,related_name='lessons_taught')

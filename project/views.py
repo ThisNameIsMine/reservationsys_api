@@ -119,7 +119,7 @@ def createLesson(request,id:int,format=None):
         return Response({'status':'failed','message':'Only teachers can create lessons'})
     else:
         lesson_data = {
-            'teacher': teacher,
+            'teacher': teacher.pk,
             'start_time': request.data['start_time'],
             'end_time': request.data['end_time'],            
             'total_slots': request.data['total_slots'],
