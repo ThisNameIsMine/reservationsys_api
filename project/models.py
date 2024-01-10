@@ -54,6 +54,7 @@ class Lesson(models.Model):
     price = models.DecimalField(max_digits=7, decimal_places=2)
     note = models.TextField(default="")
     list_of_students = models.ManyToManyField(UserNew, through='Reservation',related_name='lessons_attended')
+    name = models.CharField(max_length=255, default="")
 
     
 

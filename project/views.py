@@ -146,7 +146,8 @@ def getAllLessons(request):
 @api_view(['GET'])
 def getLessons(request,id:int,format=None):
     user = get_object_or_404(UserNew,pk=id)
-    if user.role == 'teacher':            
+    if user.role == 'teacher':          
+        print('reached')  
         lessons = Lesson.objects.filter(teacher=user)        
     elif user.role == 'student':        
         allLesons = Lesson.objects.all()
@@ -173,6 +174,10 @@ def joinLesson(request,format=None):#,id:int
     student = get_object_or_404(UserNew,pk=request.data['student_id'])
     lesson = get_object_or_404(Lesson,pk=request.data['lesson_id'])
     print('student: ',student.id,'lesson: ',lesson.id)
+    print(student.role)
+    if student.role != 'student':
+        return Response({'status':'failed','message':'Only students can join lessons'},status=200)
+
     if lesson.list_of_students.filter(pk=student.id).exists():
         return Response({'status':'failed','message': 'You are already attending this lesson'}, status=200)
     else:
@@ -209,6 +214,7 @@ def leaveLesson(request,format=None):#,id:int
             reservation = Reservation.objects.filter(student=student, lesson=lesson)
             reservation.delete()
             return Response({'status':'success','message':'Lesson left'},status=200)
+
 
 # =========================== Payments Work in progress ==============================================
 
@@ -258,11 +264,6 @@ def createReview(request,id:int,format=None):
     serializer = ReviewSerializer(review, many=False)
     return Response({'status':'success','message':'Review created','data':serializer.data})
 
-
-#vytvaranie hodin
-# teacher, start_time, end_time, taken_slots, total_slots, language, price, note, list_of_students
-
-#mazanie hodin ak viac ako 24h pred hodinou
 # ============================= Promocodes - TESTED  ============================================
 
 #promocodes
