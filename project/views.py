@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import check_password
 import secrets
-
+from django.utils import timezone
 
 
 @api_view(['POST'])
@@ -204,7 +204,7 @@ def leaveLesson(request,format=None):#,id:int
         return Response({'status':'failed','message':'Only students can leave lessons'},status=200)
 
     if lesson.list_of_students.filter(pk=student.id).exists():
-        if lesson.start_time < datetime.now() + datetime.timedelta(days=1):
+        if lesson.start_time < timezone.now() + timezone.timedelta(days=1):
             return Response({'status':'failed','message':'You can not leave lesson less than 24h before it starts'},status=200)
         else:
             lesson.taken_slots -= 1        
