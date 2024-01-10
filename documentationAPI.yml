@@ -406,3 +406,35 @@ paths:
               example:
                 status: fail
                 message: You cannot leave the lesson less than 24h before it starts
+  /list/Languages:
+      get:
+        summary: Retrieve the list of language values
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json:
+                example:
+                  status: success
+                  message: Languages retrieved
+                  data:
+                    - English
+                    - German
+                    - French
+                    - Spanish
+                    - Italian
+                    - Russian
+                    - Chinese
+                    - Japanese
+                    - Korean
+                    - Arabic
+                    - Slovak
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                example:
+                  status: error
+                  message: Internal Server Error  
+
+

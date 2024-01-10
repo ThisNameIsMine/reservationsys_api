@@ -215,6 +215,14 @@ def leaveLesson(request,format=None):#,id:int
             reservation.delete()
             return Response({'status':'success','message':'Lesson left'},status=200)
 
+@api_view(['GET'])
+def getLanguages(request):
+    # Retrieve the choices from the model
+    language_choices = Lesson._meta.get_field('language').choices
+
+    # Convert choices to a list
+    languages = [value for key, value in language_choices]
+    return Response({'status':'success','message':'Languages retrieved','data':languages})
 
 # =========================== Payments Work in progress ==============================================
 

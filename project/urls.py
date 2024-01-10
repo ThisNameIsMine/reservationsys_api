@@ -45,7 +45,7 @@ urlpatterns = [
     
     #--- NOT Tested ---            
     #path('', views.getInfo, name='info'),
-   
+    path('list/Languages', views.getLanguages, name='getLanguages'),
 
     path('create/Review/<int:id>', views.createReview, name='createReview'),
     path('list/Reviews/all', views.getAllReviews, name='allReviews'),      

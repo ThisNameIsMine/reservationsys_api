@@ -32,7 +32,7 @@ class Language(models.Model):
 
 # teacher, start_time, end_time, taken_slots, total_slots, language, price, note, list_of_students
 class Lesson(models.Model):
-    languages = [        
+    languages = [
         ('english', 'English'),
         ('german', 'German'),
         ('french', 'French'),
