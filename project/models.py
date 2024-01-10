@@ -2,8 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 
-# change on_delete from Cascade to PROTECT ?
-#write a function for all users for registration
+
 class UserNew(models.Model):
     id = models.AutoField(primary_key=True)
     firstName = models.CharField(max_length=255)
@@ -25,23 +24,7 @@ class UserNew(models.Model):
     def __str__(self):
         return self.firstName + " " + self.lastName + "  " + self.email + " " + self.role
 
-#================================= Don't use these==================================================
-class Teacher(models.Model):
-    user = models.OneToOneField(UserNew, on_delete=models.CASCADE)
-    earnings = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    last_active = models.DateTimeField(auto_created=True, blank=False)
 
-    def __str__(self):
-        return self.user.firstName + " " + self.user.lastName + " - " #+ self.last_active
-
-class Student(models.Model):
-    user = models.OneToOneField(UserNew, on_delete=models.CASCADE)
-    account_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    #last_active = models.DateTimeField(auto_created=True, blank=True)
-    last_active = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.user.username + " - " + self.last_active
 #===================================================================================================
 
 class Language(models.Model):

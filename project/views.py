@@ -1,5 +1,5 @@
-from .models import Payment, Review, Teacher, Student, Lesson, Reservation, Notification, UserNew, PromoCode
-from .serializers import LessonSerializer, NotificationSerializer, PaymentSerializer, ReviewSerializer, TeacherSerializer, UserBacisSerializer, UserNewSerializer, PromoCodeSerializer
+from .models import Payment, Review, Lesson, Reservation, Notification, UserNew, PromoCode
+from .serializers import LessonSerializer, NotificationSerializer, PaymentSerializer, ReviewSerializer, UserBacisSerializer, UserNewSerializer, PromoCodeSerializer
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
@@ -16,7 +16,7 @@ def registerUser(request):
     if serializer.is_valid():
         # Serializer will hash the password and create the user if the data is valid
         serializer.save()
-        return Response({'status':'success','message': 'User registered successfully'}, status=status.HTTP_201_CREATED)
+        return Response({'status':'success','message': 'User registered successfully','user':serializer.data}, status=status.HTTP_201_CREATED)
     else:
         return Response({'status':'failed','message': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -155,8 +155,11 @@ def getLessons(request,id:int,format=None):
                 lessons.append(lesson)
             
         #lessons = Lesson.objects.filter(student=user)
-        
+    print(lessons)
     serializer = LessonSerializer(lessons, many=True)
+    print(serializer)
+    print('Data:')
+    print(serializer.data)
     for lesson in lessons:
         print(type(serializer))
         #lesson.teacher = UserBacisSerializer(lesson.teacher, many=False).data
@@ -169,22 +172,41 @@ def joinLesson(request,format=None):#,id:int
     student = get_object_or_404(UserNew,pk=request.data['student_id'])
     lesson = get_object_or_404(Lesson,pk=request.data['lesson_id'])
     print('student: ',student.id,'lesson: ',lesson.id)
-    if lesson.taken_slots < lesson.total_slots:
-        if lesson.list_of_students.filter(pk=student.id).exists():
-            return Response({'status':'failed','message': 'You are already attending this lesson'}, status=200)
-        else:
+    if lesson.list_of_students.filter(pk=student.id).exists():
+        return Response({'status':'failed','message': 'You are already attending this lesson'}, status=200)
+    else:
+        if lesson.taken_slots == lesson.total_slots:
+            return Response({'status':'failed','message':'Lesson is full'},status=200)
+        else:            
             lesson.taken_slots += 1
             reservation = Reservation.objects.create(student=student, lesson=lesson)
             reservation.save()
             lesson.save()
-            
+            student.balance -= lesson.price
+            student.save()
+                
             serializer = LessonSerializer(lesson, many=False)
-            return Response({'status':'success','message':'Lesson joined','data':serializer.data})
-    else:
-        return Response({'status':'failed','message':'Lesson is full'})
+            return Response({'status':'success','message':'Lesson joined','data':serializer.data},status=200)                
 
+# ============================= TESTED - Leave lesson ==========================================
+@api_view(['POST'])
+def leaveLesson(request,format=None):#,id:int
+    student = get_object_or_404(UserNew,pk=request.data['student_id'])
+    lesson = get_object_or_404(Lesson,pk=request.data['lesson_id'])
+    print('student: ',student.id,'lesson: ',lesson.id)
+    if student.role != 'student':
+        return Response({'status':'failed','message':'Only students can leave lessons'},status=200)
 
-# ===================================== Work in progress ==============================================
+    if lesson.list_of_students.filter(pk=student.id).exists():
+        lesson.taken_slots -= 1        
+        lesson.save()
+        student.balance += lesson.price
+        student.save()
+        reservation = Reservation.objects.filter(student=student, lesson=lesson)
+        reservation.delete()
+        return Response({'status':'success','message':'Lesson left'},status=200)
+
+# =========================== Payments Work in progress ==============================================
 
 @api_view(['POST'])
 def createPayment(request,id:int,format=None):
@@ -211,7 +233,7 @@ def getUserPayments(request,id:int,format=None):
     serializer = PaymentSerializer(payments, many=True)
     return Response({'status':'success','message':'Payments retrieved','data':serializer.data})
 
-
+# ============================= Reviews - Work in progress  ============================================
 @api_view(['GET'])
 def getAllReviews(request):
     reviews = Review.objects.all()
@@ -237,6 +259,7 @@ def createReview(request,id:int,format=None):
 # teacher, start_time, end_time, taken_slots, total_slots, language, price, note, list_of_students
 
 #mazanie hodin ak viac ako 24h pred hodinou
+# ============================= Promocodes - TESTED  ============================================
 
 #promocodes
 @api_view(['POST'])

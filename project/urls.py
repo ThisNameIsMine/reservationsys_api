@@ -36,7 +36,8 @@ urlpatterns = [
     path('create/notification/<int:id>', views.createNotification, name='createNotification'),
     path('list/notifications/<int:id>', getNotifications, name='getUserNotifications'),    
     path('joinlesson', views.joinLesson, name='joinLesson'),
-    
+    path('leavelesson', views.leaveLesson, name='leaveLesson'),
+
     path('create/PromoCode', views.generatePromoCode, name='createPromoCode'),
     path('list/PromoCode/all', views.getAllPromoCodes, name='allPromoCodes'),
     path('use/PromoCode/<int:id>', views.applyPromoCodeToUser, name='usePromoCode'), 
@@ -44,20 +45,20 @@ urlpatterns = [
     
     #--- NOT Tested ---            
     #path('', views.getInfo, name='info'),
+   
 
-
-    path('create/Payment/<int:id>', views.createPayment, name='createPayment'),
-    path('list/Payments/all', views.getAllPayments, name='allPayments'),
-    path('list/Payments/<int:id>', views.getUserPayments, name='getPayment'),
-    
     path('create/Review/<int:id>', views.createReview, name='createReview'),
     path('list/Reviews/all', views.getAllReviews, name='allReviews'),      
     path('list/Reviews/<int:id>', views.getReviews, name='getReview'),
 
-    #TODO rating of teacher/student
-    # path('create/Rating/<int:id>', views.createRating, name='createRating'),
-    # path('list/Ratings/all', views.getAllRatings, name='allRatings'),
-    # path('list/Ratings/<int:id>', views.getRatings, name='getRating'),
+    # Handle on Backend
+    # path('create/Payment/<int:id>', views.createPayment, name='createPayment'),
+    # path('list/Payments/all', views.getAllPayments, name='allPayments'),
+    # path('list/Payments/<int:id>', views.getUserPayments, name='getPayment'),
+    
+    
+
+    
 
 
 ]
