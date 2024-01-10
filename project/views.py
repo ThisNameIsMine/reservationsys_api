@@ -1,3 +1,4 @@
+import datetime
 from .models import Payment, Review, Lesson, Reservation, Notification, UserNew, PromoCode
 from .serializers import LessonSerializer, NotificationSerializer, PaymentSerializer, ReviewSerializer, UserBacisSerializer, UserNewSerializer, PromoCodeSerializer
 from rest_framework.decorators import api_view
@@ -198,13 +199,16 @@ def leaveLesson(request,format=None):#,id:int
         return Response({'status':'failed','message':'Only students can leave lessons'},status=200)
 
     if lesson.list_of_students.filter(pk=student.id).exists():
-        lesson.taken_slots -= 1        
-        lesson.save()
-        student.balance += lesson.price
-        student.save()
-        reservation = Reservation.objects.filter(student=student, lesson=lesson)
-        reservation.delete()
-        return Response({'status':'success','message':'Lesson left'},status=200)
+        if lesson.start_time < datetime.now() + datetime.timedelta(days=1):
+            return Response({'status':'failed','message':'You can not leave lesson less than 24h before it starts'},status=200)
+        else:
+            lesson.taken_slots -= 1        
+            lesson.save()
+            student.balance += lesson.price
+            student.save()
+            reservation = Reservation.objects.filter(student=student, lesson=lesson)
+            reservation.delete()
+            return Response({'status':'success','message':'Lesson left'},status=200)
 
 # =========================== Payments Work in progress ==============================================
 
