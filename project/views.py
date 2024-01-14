@@ -221,6 +221,37 @@ def leaveLesson(request,format=None):#,id:int
             return Response({'status':'success','message':'Lesson left'},status=200)
 
 @api_view(['GET'])
+def getLessonsVisited(request,id:int,format=None):
+    user = get_object_or_404(UserNew,pk=id)
+    if user.role == 'teacher':          
+        print('reached')  
+        lessons = Lesson.objects.filter(teacher=user)        
+    elif user.role == 'student':        
+        allLesons = Lesson.objects.all()
+        lessons =[]
+        for lesson in allLesons:
+            if lesson.list_of_students.filter(pk=user.id).exists() and lesson.start_time < timezone.now():
+                lessons.append(lesson)
+    serializer = LessonSerializer(lessons, many=True)
+    return Response({'status':'success','message':'Visited lessons of user retrieved','data':serializer.data})
+
+@api_view(['GET'])
+def getLessonsJoined(request,id:int,format=None):
+    user = get_object_or_404(UserNew,pk=id)
+    if user.role == 'teacher':
+        print('reached')
+        lessons = Lesson.objects.filter(teacher=user.pk)        
+    elif user.role == 'student':        
+        allLesons = Lesson.objects.all()
+        lessons =[]
+        for lesson in allLesons:
+            if lesson.list_of_students.filter(pk=user.id).exists() and lesson.start_time > timezone.now():
+                lessons.append(lesson)
+    serializer = LessonSerializer(lessons, many=True)
+    return Response({'status':'success','message':'Joined lessons of user retrieved','data':serializer.data})
+
+
+@api_view(['GET'])
 def getLanguages(request):
     # Retrieve the choices from the model
     language_choices = Lesson._meta.get_field('language').choices

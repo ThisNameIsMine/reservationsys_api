@@ -32,6 +32,10 @@ urlpatterns = [
     path('create/lesson/<int:id>', views.createLesson, name='createLesson'), 
     path('list/lessons/all', views.getAllLessons, name='getLesson'),
     path('list/lessons/<int:id>', views.getLessons, name='getLesson'),
+    
+    path('list/lessons/visited/<int:id>', views.getLessonsVisited, name='getLessonVisited'),
+    path('list/lessons/joined/<int:id>', views.getLessonsJoined, name='getLessonJoined'),
+
 
     path('create/notification/<int:id>', views.createNotification, name='createNotification'),
     path('list/notifications/<int:id>', getNotifications, name='getUserNotifications'),    
