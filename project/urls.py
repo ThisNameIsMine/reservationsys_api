@@ -32,29 +32,28 @@ urlpatterns = [
     path('create/lesson/<int:id>', views.createLesson, name='createLesson'), 
     path('list/lessons/all', views.getAllLessons, name='getLesson'),
     path('list/lessons/<int:id>', views.getLessons, name='getLesson'),
-    
+
     path('list/lessons/visited/<int:id>', views.getLessonsVisited, name='getLessonVisited'),
     path('list/lessons/joined/<int:id>', views.getLessonsJoined, name='getLessonJoined'),
 
+    path('joinlesson', views.joinLesson, name='joinLesson'),
+    path('leavelesson', views.leaveLesson, name='leaveLesson'),
 
+    
     path('create/notification/<int:id>', views.createNotification, name='createNotification'),
     path('list/notifications/<int:id>', getNotifications, name='getUserNotifications'),    
     path('list/notifications/all', views.getAllNotifications, name='allNotifications'),
-
-    path('joinlesson', views.joinLesson, name='joinLesson'),
-    path('leavelesson', views.leaveLesson, name='leaveLesson'),
+    
 
     path('create/promoCode', views.generatePromoCode, name='createPromoCode'),
     path('list/promoCode/all', views.getAllPromoCodes, name='allPromoCodes'),
     path('use/promoCode/<int:id>', views.applyPromoCodeToUser, name='usePromoCode'), 
     
     
-    #--- NOT Tested ---            
-    #path('', views.getInfo, name='info'),
     path('list/languages', views.getLanguages, name='getLanguages'),
 
-    path('create/review/<int:id>', views.createReview, name='createReview'),
-    path('list/reviews/all', views.getAllReviews, name='allReviews'),      
+    path('create/review', views.createReview, name='createReview'),
+    path('list/reviews/all', views.getAllReviews, name='allReviews'),
     path('list/reviews/<int:id>', views.getReviews, name='getReview'),
 
     # Handle on Backend

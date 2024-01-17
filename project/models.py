@@ -88,8 +88,6 @@ class Review(models.Model):
     review_content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
-
-
 # To be implemented
 class Message(models.Model):
     sender = models.ForeignKey(UserNew, on_delete=models.CASCADE, related_name='sender')

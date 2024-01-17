@@ -79,9 +79,9 @@ def createNotification(request,id,format=None): # TODO handle sending notificati
 
         # Create a notification for the user
         notification_data = {
-            'user': user.id,
-            'message_type': 'YourMessageType',  # Provide an appropriate message type
-            'message_content': 'Your message content',  # Provide the content of the notification
+            'user': id,
+            'message_type': request.data['message_type'],  # Provide an appropriate message type
+            'message_content': request.data['message_content'],  # Provide the content of the notification
         }
 
         serializer = NotificationSerializer(data=notification_data)
@@ -146,6 +146,9 @@ def createLesson(request,id:int,format=None):
 def getAllLessons(request):
     lessons = Lesson.objects.all()
     serializer = LessonSerializer(lessons, many=True)
+
+    
+
     return Response({'status':'success','message':'All lessons retrieved','data':serializer.data})
 
 @api_view(['GET'])
@@ -287,7 +290,7 @@ def getUserPayments(request,id:int,format=None):
     serializer = PaymentSerializer(payments, many=True)
     return Response({'status':'success','message':'Payments retrieved','data':serializer.data})
 
-# ============================= Reviews - Work in progress  ============================================
+# ============================= Reviews - TESTED  ============================================
 @api_view(['GET'])
 def getAllReviews(request):
     reviews = Review.objects.all()
@@ -297,20 +300,20 @@ def getAllReviews(request):
 @api_view(['GET'])
 def getReviews(request,id:int,format=None):
     teacher = get_object_or_404(UserNew,pk=id)
-    reviews = Review.objects.filter(teacher=teacher.user)
+    reviews = Review.objects.filter(teacher=teacher)
     serializer = ReviewSerializer(reviews, many=True)
     return Response({'status':'success','message':'Reviews retrieved','data':serializer.data})
 
 @api_view(['POST'])
-def createReview(request,id:int,format=None):
-    student = get_object_or_404(UserNew,pk=id)
-    review = Review.objects.create(student=student, teacher=request.data['teacher'], rating=request.data['rating'], review_content=request.data['review_content'])
+def createReview(request,format=None):
+    student = get_object_or_404(UserNew,pk=request.data['student'])
+    teacher = get_object_or_404(UserNew,pk=request.data['teacher'])
+    review = Review.objects.create(student=student, teacher=teacher, rating=request.data['rating'], review_content=request.data['review_content'])
     serializer = ReviewSerializer(review, many=False)
     return Response({'status':'success','message':'Review created','data':serializer.data})
 
 # ============================= Promocodes - TESTED  ============================================
 
-#promocodes
 @api_view(['POST'])
 def generatePromoCode(request,format=None):    
     amount = request.data['amount']
