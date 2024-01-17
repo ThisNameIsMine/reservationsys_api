@@ -56,6 +56,12 @@ def getAllUsers(request):
     return Response({'status':'success','message':'Users retrieved','data':serializer.data})
 
 @api_view(['GET'])
+def getUserById(request,id:int):
+    user = get_object_or_404(UserNew,pk=id)
+    serializer = UserNewSerializer(user,many=False)
+    return Response({'status':'success','message':'User retrieved','data':serializer.data})
+
+@api_view(['GET'])
 def getTeachers(request):
     teachers = UserNew.objects.all().filter(role='teacher')
     serializer = UserBacisSerializer(teachers, many=True)

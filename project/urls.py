@@ -28,6 +28,7 @@ urlpatterns = [
 
     path('list/teachers', views.getTeachers, name='getTeachers'),
     path('list/students', views.getStudents, name='getStudents'),
+    path('list/users/<int:id>',views.getUserById,name='getuserbyid'),
 
     path('create/lesson/<int:id>', views.createLesson, name='createLesson'), 
     path('list/lessons/all', views.getAllLessons, name='getLesson'),
