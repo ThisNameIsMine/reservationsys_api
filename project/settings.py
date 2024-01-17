@@ -29,7 +29,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['reservation-api-y8s8.onrender.com','localhost','127.0.0.1']
 
-
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Add your frontend's URL
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'project',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -49,6 +52,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
